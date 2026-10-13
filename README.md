@@ -57,7 +57,7 @@ A few decisions worth knowing about:
 | Weekdays at 05:00 UTC | Typecheck, then the full suite, to catch regressions that nobody pushed |
 | Manual | Choose `full`, `smoke`, `ui` or `api` |
 
-On every run the HTML report, traces, screenshots and videos of failures are uploaded as artifacts, with retries enabled in CI so a one-off network blip does not turn the build red. Concurrent runs on the same branch cancel the older one.
+On every run the HTML report, traces, screenshots and videos of failures are uploaded as artifacts, with retries enabled in CI so a one-off network blip does not turn the build red. On pull requests a newer push cancels the older run; runs on `main` are never cancelled.
 
 ## Stability
 
