@@ -63,6 +63,10 @@ On every run the HTML report, traces, screenshots and videos of failures are upl
 
 The full suite was run five times in a row (165 test executions) with no failures before this was published.
 
+## More of my work
+
+This is one of several public projects. The others (an API auditor, an API test suite, a test helpers library and k6 load tests) are indexed in [qa-portfolio-docs](https://github.com/MarioGRodriguez28/qa-portfolio-docs) and on [mariogrodriguez.com](https://mariogrodriguez.com).
+
 ## Notes
 
 This is public-demo work, not client code. I keep client projects private. If you want to see how I would set this up for your product, or review a suite that already exists, you can reach me through [mariogrodriguez.com](https://mariogrodriguez.com).
