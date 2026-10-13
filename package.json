@@ -1,0 +1,36 @@
+{
+  "name": "playwright-e2e-framework",
+  "version": "1.0.0",
+  "description": "End-to-end and API test framework with Playwright and TypeScript: page objects, custom fixtures, tagged suites and a CI pipeline with reports and traces",
+  "scripts": {
+    "test": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:ui": "playwright test --project=chromium",
+    "test:api": "playwright test --project=api",
+    "test:headed": "playwright test --project=chromium --headed",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "playwright",
+    "typescript",
+    "e2e",
+    "api-testing",
+    "test-automation",
+    "github-actions"
+  ],
+  "author": "Mario Rodríguez",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MarioGRodriguez28/playwright-e2e-framework.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^26.0.0",
+    "typescript": "^5.9.0"
+  }
+}

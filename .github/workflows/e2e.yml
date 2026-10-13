@@ -1,0 +1,91 @@
+name: E2E
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 5 * * 1-5'
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: 'Which suite to run'
+        type: choice
+        options: [full, smoke, ui, api]
+        default: full
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+
+  smoke:
+    if: github.event_name == 'pull_request'
+    needs: typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:smoke
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+
+  full:
+    if: github.event_name != 'pull_request'
+    needs: typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Run tests
+        run: |
+          case "${{ github.event.inputs.suite }}" in
+            smoke) npm run test:smoke ;;
+            ui)    npm run test:ui ;;
+            api)   npm run test:api ;;
+            *)     npm test ;;
+          esac
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Test run" >> "$GITHUB_STEP_SUMMARY"
+          echo "Trigger: ${{ github.event_name }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Open the \`full-report\` artifact and run \`npx playwright show-report\` to see traces, screenshots and videos of any failure." >> "$GITHUB_STEP_SUMMARY"
